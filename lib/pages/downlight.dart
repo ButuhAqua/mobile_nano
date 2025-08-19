@@ -1,33 +1,35 @@
+// lib/pages/downlight.dart
 import 'package:flutter/material.dart';
 
-import 'categories_nano.dart';
+import 'categories_piko.dart';
 import 'create_sales_order.dart';
 import 'home.dart';
 import 'profile.dart';
 
-class StreetLight712Page extends StatelessWidget {
-  const StreetLight712Page({super.key});
+class DownlightPikoPage extends StatelessWidget {
+  const DownlightPikoPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // ---- PALETTE ----
+    // ---- THEME ----
     const Color bgTop = Color(0xFF0B2741);
     const Color bgBottom = Color(0xFF0E3556);
     const Color card = Color(0xFF0F2D4B);
     const Color chip = Color(0xFF163E66);
-    const Color pillLight = Color(0xFFE7EEF7);
-    const Color pillText = Color(0xFF0F2D4B);
     const Color textPrimary = Colors.white;
+
+    // Table colors
     const Color headerDark = Color(0xFF0B2741);
-    const Color accentBlue = Color(0xFF1EA7FF); // untuk sel 6500K
+    const Color blue6500 = Color(0xFF03A9F4);
+    const Color yellow3000 = Color(0xFFFFC107);
 
     // ---- RESPONSIVE ----
     final size = MediaQuery.of(context).size;
     final bool isTablet = size.width >= 600;
     final double hPad = isTablet ? 24 : 16;
     final double vPad = isTablet ? 18 : 12;
-    final double heroH = isTablet ? 380 : 240;
-    final double? compH = isTablet ? 300 : null;
+    final double heroH = isTablet ? 360 : 240;
+    final double? compH = isTablet ? 280 : null;
 
     // ---- HELPERS ----
     Widget brandChip() => Container(
@@ -38,33 +40,29 @@ class StreetLight712Page extends StatelessWidget {
             children: [
               Icon(Icons.lightbulb_outline, color: Colors.white),
               SizedBox(width: 8),
-              Text('Nanolite', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              Text('Pikolite', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
             ],
           ),
         );
 
     Widget specPill() => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(color: pillLight, borderRadius: BorderRadius.circular(20)),
-          child: const Text(
-            'SPESIFIKASI',
-            style: TextStyle(color: pillText, fontWeight: FontWeight.w800, letterSpacing: .3),
-          ),
+          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
+          child: const Text('Spesifikasi', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800)),
         );
 
-    Widget bullet(String text, {bool bold = false}) => Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 6, color: Colors.white)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(color: textPrimary, fontWeight: bold ? FontWeight.w800 : FontWeight.w600),
-                softWrap: true,
-              ),
+    Widget bullet(String title, String value) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6),
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              children: [
+                const TextSpan(text: '• ', style: TextStyle(fontWeight: FontWeight.w800)),
+                TextSpan(text: '$title: ', style: const TextStyle(fontWeight: FontWeight.w800)),
+                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w600)),
+              ],
             ),
-          ],
+          ),
         );
 
     Widget productImage(String path, {double? height}) => Container(
@@ -82,8 +80,8 @@ class StreetLight712Page extends StatelessWidget {
           ),
         );
 
-    // Spesifikasi HANYA untuk hero
-    Widget specCard(List<String> points, {double? height}) => Container(
+    // Spesifikasi HANYA untuk hero (sesuai gambar 1)
+    Widget specCard({double? height}) => Container(
           height: height,
           decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
           padding: const EdgeInsets.all(16),
@@ -92,75 +90,85 @@ class StreetLight712Page extends StatelessWidget {
             children: [
               Center(child: specPill()),
               SizedBox(height: isTablet ? 16 : 12),
-              for (int i = 0; i < points.length; i++) ...[
-                bullet(points[i], bold: i == 0),
-                const SizedBox(height: 8),
-              ],
+              bullet('Tahan Sampai', '15.000 Jam'),
+              bullet('Voltase', '165v–250v (50/60Hz)'),
+              bullet('Fluks Cahaya', '600Lm'),
+              bullet('Hemat Energi', '90%'),
+              bullet('CRI', '>85'),
               if (height != null) const Spacer(),
             ],
           ),
         );
 
-    // ===== TABEL SPESIFIKASI (di tengah, di atas perbandingan) =====
+    // ------- TABLE (sesuai gambar 2) -------
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           color: headerDark,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
-          ),
+          alignment: Alignment.center,
+          child: Text(text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
         );
 
-    // <- updated: highlight memberi latar biru penuh & teks putih
-    Widget td(String text, {bool highlight = false}) => Container(
+    Widget tdText(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           alignment: Alignment.center,
-          color: highlight ? accentBlue : Colors.transparent,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white, // teks putih (termasuk saat highlight)
-              fontWeight: highlight ? FontWeight.w800 : FontWeight.w600,
-              fontSize: 12,
-            ),
-          ),
+          child: Text(text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+        );
+
+    Widget tdColor(String text, Color bg, {bool darkText = false}) => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          alignment: Alignment.center,
+          color: bg,
+          child: Text(text,
+              style: TextStyle(
+                color: darkText ? Colors.black : Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 12,
+              )),
         );
 
     Widget specTable() {
       final rows = [
-        ['150 Watt', '19500lm/watt', '553mm x 212mm x 84mm', '10', '6500K', 'Cahaya Putih Kebiruan'],
+        ['6 Watt', '108mm x 25mm', 'Rp 23.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
+        ['9 Watt', '125mm x 25mm', 'Rp 30.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
+        ['12 Watt', '150mm x 25mm', 'Rp 40.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
+        ['18 Watt', '175mm x 25mm', 'Rp 49.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
       ];
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         border: TableBorder.all(color: Colors.white24, width: 1),
         columnWidths: const {
-          0: FixedColumnWidth(110),
-          1: FixedColumnWidth(130),
-          2: FixedColumnWidth(200),
-          3: FixedColumnWidth(80),
-          4: FixedColumnWidth(100),
-          5: FixedColumnWidth(180),
+          0: FixedColumnWidth(110), // Varian Watt
+          1: FixedColumnWidth(200), // Dimensi Produk
+          2: FixedColumnWidth(120), // Harga
+          3: FixedColumnWidth(90),  // Warna 6500K
+          4: FixedColumnWidth(220), // Keterangan 6500K
+          5: FixedColumnWidth(90),  // Warna 3000K
+          6: FixedColumnWidth(220), // Keterangan 3000K
         },
         children: [
           TableRow(children: [
             th('Varian Watt'),
-            th('Lumen'),
-            th('Ukuran'),
-            th('Isi/Dus'),
+            th('Dimensi Produk'),
+            th('Harga'),
+            th('Warna'),
+            th('Keterangan'),
             th('Warna'),
             th('Keterangan'),
           ]),
           for (final r in rows)
             TableRow(children: [
-              td(r[0]),
-              td(r[1]),
-              td(r[2]),
-              td(r[3]),
-              td(r[4], highlight: true), // 6500K: background biru & teks putih
-              td(r[5]),
+              tdText(r[0]),
+              tdText(r[1]),
+              tdText(r[2]),
+              tdColor(r[3], blue6500),
+              tdText(r[4]),
+              tdColor(r[5], yellow3000, darkText: true),
+              tdText(r[6]),
             ]),
         ],
       );
@@ -172,14 +180,14 @@ class StreetLight712Page extends StatelessWidget {
       );
     }
 
-    // Perbandingan: hanya judul + gambar
-    Widget comparisonImageBlock({required String title, required String imagePath}) => Column(
+    // ------- COMPARISON (gambar saja; 2 kolom tablet, 1 kolom mobile) -------
+    Widget compareCard(String title, String imgPath) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title,
                 style: TextStyle(color: textPrimary, fontWeight: FontWeight.w800, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
-            productImage(imagePath, height: compH),
+            productImage(imgPath, height: compH),
           ],
         );
 
@@ -195,16 +203,14 @@ class StreetLight712Page extends StatelessWidget {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const CategoriesNanoScreen()),
-              );
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => CategoriesPikoScreen()));
             }
           },
         ),
-        title: const Text('nanopiko', style: TextStyle(color: Colors.black)),
+        title: const Text('pikolite', style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
+
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [bgTop, bgBottom]),
@@ -215,25 +221,15 @@ class StreetLight712Page extends StatelessWidget {
             brandChip(),
             SizedBox(height: vPad),
 
-            Text('Product Street Light 712',
+            Text('Product Downlight',
                 style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
 
-            // HERO: gambar + spesifikasi (row di tablet, column di HP)
+            // HERO (gambar + spesifikasi)
             LayoutBuilder(builder: (context, c) {
               final row = isTablet && c.maxWidth >= 680;
-              final img = productImage('assets/images/sladjustnano.jpg', height: row ? heroH : null);
-
-              final spec = specCard(const [
-                'Tahan Sampai: 50.000 Jam',
-                'Power Faktor: >0.5',
-                'Tegangan: 100–300V (50/60Hz)',
-                'Jenis: Lampu Jalan',
-                'CRI: >85',
-                'IP: 65',
-                'Ukuran Lubang Tiang: 60mm',
-                'Sudut: Berputar sampai sudut 60°',
-              ], height: row ? heroH : null);
+              final img = productImage('assets/images/downlightpiko.jpg', height: row ? heroH : null);
+              final spec = specCard(height: row ? heroH : null);
 
               if (row) {
                 return Row(children: [
@@ -245,38 +241,34 @@ class StreetLight712Page extends StatelessWidget {
               return Column(children: [img, SizedBox(height: vPad), spec]);
             }),
 
-            SizedBox(height: vPad),
+            SizedBox(height: vPad * 1.2),
 
-            // TABEL SPESIFIKASI VARIAN
+            // TABLE di tengah
             specTable(),
 
             SizedBox(height: vPad * 1.5),
 
-            // PERBANDINGAN (tablet 2 kolom, mobile 1 kolom)
-            if (isTablet) ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            // COMPARISON
+            LayoutBuilder(builder: (context, c) {
+              final twoCols = isTablet && c.maxWidth >= 680;
+              if (twoCols) {
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: compareCard('PIKOLITE', 'assets/images/downpiko.jpg')),
+                    const SizedBox(width: 16),
+                    Expanded(child: compareCard('PRODUK LAIN', 'assets/images/downkom.jpg')),
+                  ],
+                );
+              }
+              return Column(
                 children: [
-                  Expanded(
-                    child: comparisonImageBlock(
-                      title: 'NANOLITE',
-                      imagePath: 'assets/images/sladjnano.jpg',
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: comparisonImageBlock(
-                      title: 'PRODUK LAIN',
-                      imagePath: 'assets/images/sladjkom.jpg',
-                    ),
-                  ),
+                  compareCard('PIKOLITE', 'assets/images/downpiko.jpg'),
+                  SizedBox(height: vPad * 1.5),
+                  compareCard('PRODUK LAIN', 'assets/images/downkom.jpg'),
                 ],
-              ),
-            ] else ...[
-              comparisonImageBlock(title: 'NANOLITE', imagePath: 'assets/images/sladjnano.jpg'),
-              SizedBox(height: vPad * 1.5),
-              comparisonImageBlock(title: 'PRODUK LAIN', imagePath: 'assets/images/sladjkom.jpg'),
-            ],
+              );
+            }),
           ],
         ),
       ),
@@ -312,7 +304,7 @@ class StreetLight712Page extends StatelessWidget {
   }
 }
 
-// Bottom nav item (reusable)
+// Reusable bottom item
 Widget _navItem(IconData icon, String label, {required VoidCallback onTap}) {
   return InkWell(
     onTap: onTap,

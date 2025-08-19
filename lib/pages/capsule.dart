@@ -9,7 +9,6 @@ class CapsuleScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isTablet = MediaQuery.of(context).size.shortestSide >= 600;
     final double padding = isTablet ? 30.0 : 16.0;
-    final screenWidth = MediaQuery.of(context).size.width;
     final double comparisonImageHeight = isTablet ? 220 : 180;
 
     return Scaffold(
@@ -17,7 +16,7 @@ class CapsuleScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
         elevation: 0,
-        leading: BackButton(color: Colors.black),
+        leading: const BackButton(color: Colors.black),
         title: const Text('nanopiko', style: TextStyle(color: Colors.black)),
       ),
       body: SingleChildScrollView(
@@ -34,9 +33,9 @@ class CapsuleScreen extends StatelessWidget {
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(24),
                 ),
-                child: Row(
+                child: const Row(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(Icons.lightbulb, color: Colors.black),
                     SizedBox(width: 8),
                     Text("Nanolite", style: TextStyle(color: Colors.black)),
@@ -49,53 +48,79 @@ class CapsuleScreen extends StatelessWidget {
             const Text("Product Capsule", style: TextStyle(fontSize: 18, color: Colors.white)),
             const SizedBox(height: 16),
 
-            // Top Product Display
-            Container(
-              decoration: BoxDecoration(
-                color: const Color(0xFF16273F),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Image
-                  Expanded(
-                    flex: 5,
-                    child: Image.asset("assets/images/capsule.jpg", height: isTablet ? 220 : 180),
+            // ===== Top Product Display: responsive (tablet: row, phone: column) =====
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final sideBySide = isTablet && constraints.maxWidth >= 680;
+
+                Widget imageCard = Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF16273F),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  const SizedBox(width: 16),
-                  // Specs
-                  Expanded(
-                    flex: 6,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          child: const Text('Spesifikasi', style: TextStyle(fontWeight: FontWeight.bold)),
-                        ),
-                        const SizedBox(height: 12),
-                        const Text("• Tahan Sampai: 25.000 Jam", style: TextStyle(color: Colors.white)),
-                        const Text("• Fitting: E27", style: TextStyle(color: Colors.white)),
-                        const Text("• Hemat Energi: 90%", style: TextStyle(color: Colors.white)),
-                        const Text("• LED: Samsung", style: TextStyle(color: Colors.white)),
-                        const Text("• Tegangan: 165–250V", style: TextStyle(color: Colors.white)),
-                      ],
+                  padding: const EdgeInsets.all(16),
+                  child: Center(
+                    child: Image.asset(
+                      "assets/images/capsule.jpg",
+                      height: isTablet ? 240 : 200,
+                      fit: BoxFit.contain,
                     ),
                   ),
-                ],
-              ),
+                );
+
+                Widget specCard = Container(
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF16273F),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: const Text('Spesifikasi', style: TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                      const SizedBox(height: 12),
+                      const Text("• Tahan Sampai: 25.000 Jam", style: TextStyle(color: Colors.white)),
+                      const Text("• Fitting: E27", style: TextStyle(color: Colors.white)),
+                      const Text("• Hemat Energi: 90%", style: TextStyle(color: Colors.white)),
+                      const Text("• LED: Samsung", style: TextStyle(color: Colors.white)),
+                      const Text("• Tegangan: 165–250V", style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
+                );
+
+                if (sideBySide) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 5, child: imageCard),
+                      const SizedBox(width: 16),
+                      Expanded(flex: 6, child: specCard),
+                    ],
+                  );
+                }
+                // smartphone: image di atas, spesifikasi di bawah (lebih rapi & lega)
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    imageCard,
+                    const SizedBox(height: 12),
+                    specCard,
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height: 24),
 
-            // Tabel Responsif
+            // ===== Tabel Responsif (HP bisa scroll ke samping) =====
             LayoutBuilder(
               builder: (context, constraints) {
                 final isTabletLayout = constraints.maxWidth >= 600;
@@ -112,24 +137,39 @@ class CapsuleScreen extends StatelessWidget {
             const Text("Perbandingan:", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
 
-            Row(
-              children: [
-                Expanded(
-                  child: Image.asset(
-                    "assets/images/nanocapspek.jpg",
-                    height: comparisonImageHeight,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Image.asset(
-                    "assets/images/kompcaps.jpg",
-                    height: comparisonImageHeight,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ],
+            // ===== Perbandingan: tablet 2 kolom, smartphone 1 kolom turun =====
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final twoCols = isTablet && constraints.maxWidth >= 680;
+
+                final left = Image.asset(
+                  "assets/images/nanocapspek.jpg",
+                  height: comparisonImageHeight,
+                  fit: BoxFit.contain,
+                );
+                final right = Image.asset(
+                  "assets/images/kompcaps.jpg",
+                  height: comparisonImageHeight,
+                  fit: BoxFit.contain,
+                );
+
+                if (twoCols) {
+                  return Row(
+                    children: [
+                      Expanded(child: left),
+                      const SizedBox(width: 12),
+                      Expanded(child: right),
+                    ],
+                  );
+                }
+                return Column(
+                  children: [
+                    left,
+                    const SizedBox(height: 12),
+                    right,
+                  ],
+                );
+              },
             ),
 
             const SizedBox(height: 60),
@@ -160,7 +200,7 @@ class CapsuleScreen extends StatelessWidget {
   }
 
   Widget _buildCapsuleTable({required bool isTablet}) {
-    List<List<String>> data = [
+    final data = [
       ["30 Watt", "3600lm", "178mm x 100mm", "40", "6500K", "Cahaya Putih Kebiruan"],
       ["50 Watt", "6000lm", "211mm x 120mm", "24", "6500K", "Cahaya Putih Kebiruan"],
     ];
@@ -175,20 +215,20 @@ class CapsuleScreen extends StatelessWidget {
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         columnWidths: isTablet
             ? {
-                0: FlexColumnWidth(1.4),
-                1: FlexColumnWidth(1),
-                2: FlexColumnWidth(1.7),
-                3: FlexColumnWidth(0.8),
-                4: FlexColumnWidth(0.9),
-                5: FlexColumnWidth(2),
+                0: const FlexColumnWidth(1.4),
+                1: const FlexColumnWidth(1),
+                2: const FlexColumnWidth(1.7),
+                3: const FlexColumnWidth(0.8),
+                4: const FlexColumnWidth(0.9),
+                5: const FlexColumnWidth(2),
               }
             : {
-                0: FixedColumnWidth(100),
-                1: FixedColumnWidth(80),
-                2: FixedColumnWidth(140),
-                3: FixedColumnWidth(60),
-                4: FixedColumnWidth(70),
-                5: FixedColumnWidth(150),
+                0: const FixedColumnWidth(110),
+                1: const FixedColumnWidth(100),
+                2: const FixedColumnWidth(160),
+                3: const FixedColumnWidth(80),
+                4: const FixedColumnWidth(90),
+                5: const FixedColumnWidth(170),
               },
         children: [
           TableRow(

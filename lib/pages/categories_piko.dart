@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'abulb.dart';
 import 'create_sales_order.dart';
+import 'downlight.dart' show DownlightPikoPage; // <-- tambahkan ini
 import 'home.dart';
+import 'multipiko.dart' show MultipackPikoPage; // Multipack
 import 'profile.dart';
+import 'tbulb.dart' show TBulbPage;            // T-Bulb
 
 class CategoriesPikoScreen extends StatelessWidget {
   @override
@@ -52,23 +55,29 @@ class CategoriesPikoScreen extends StatelessWidget {
                       name: 'A-Bulb',
                       imagePath: 'assets/images/abulb1.png',
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => ABulbScreen()),
-                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ABulbScreen()));
                       },
                     ),
                     _buildCategoryItem(
                       name: 'T-Bulb',
                       imagePath: 'assets/images/5WATT1.png',
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const TBulbPage()));
+                      },
                     ),
                     _buildCategoryItem(
                       name: 'Multipack',
                       imagePath: 'assets/images/image1.png',
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const MultipackPikoPage()));
+                      },
                     ),
                     _buildCategoryItem(
                       name: 'Downlight',
                       imagePath: 'assets/images/DownLight1.png',
+                      onTap: () { // <-- diarahkan ke halaman downlight
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const DownlightPikoPage()));
+                      },
                     ),
                   ],
                 ),
@@ -107,7 +116,7 @@ class CategoriesPikoScreen extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Card(
-        color: const Color(0xFF12355C), // Warna baru: sedikit lebih terang dari background
+        color: const Color(0xFF12355C),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
         ),
@@ -119,14 +128,8 @@ class CategoriesPikoScreen extends StatelessWidget {
               Flexible(
                 flex: 6,
                 child: Container(
-                  constraints: const BoxConstraints(
-                    maxHeight: 100,
-                    maxWidth: 100,
-                  ),
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.contain,
-                  ),
+                  constraints: const BoxConstraints(maxHeight: 100, maxWidth: 100),
+                  child: Image.asset(imagePath, fit: BoxFit.contain),
                 ),
               ),
               const SizedBox(height: 10),
@@ -134,11 +137,7 @@ class CategoriesPikoScreen extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,

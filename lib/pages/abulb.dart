@@ -15,10 +15,10 @@ class ABulbScreen extends StatelessWidget {
         backgroundColor: Colors.grey[200],
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
         ),
-        title: Text('nanopiko', style: TextStyle(color: Colors.black)),
+        title: const Text('nanopiko', style: TextStyle(color: Colors.black)),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(isTablet ? 24 : 16),
@@ -27,15 +27,16 @@ class ABulbScreen extends StatelessWidget {
           children: [
             ElevatedButton.icon(
               onPressed: () {},
-              icon: Icon(Icons.lightbulb_outline, color: Colors.black),
-              label: Text('Pikolite', style: TextStyle(color: Colors.black)),
+              icon: const Icon(Icons.lightbulb_outline, color: Colors.black),
+              label: const Text('Pikolite', style: TextStyle(color: Colors.black)),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey[300],
-                shape: StadiumBorder(),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: const StadiumBorder(),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+
             Text(
               'Product A-Bulb',
               style: TextStyle(
@@ -43,53 +44,49 @@ class ABulbScreen extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-            // Gambar + Spesifikasi
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 4,
-                  child: Image.asset(
-                    'assets/images/spekabulb1.png',
-                    height: isTablet ? 200 : 150,
-                  ),
-                ),
-                SizedBox(width: 16),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    padding: EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('SPESIFIKASI',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue[800])),
-                        SizedBox(height: 8),
-                        _buildSpecLine('Tahan Sampai:', '15.000 Jam'),
-                        _buildSpecLine('Fitting:', 'E27'),
-                        _buildSpecLine('Hemat Energi:', '90%'),
-                        _buildSpecLine('Lumen:', '100lm/Watt'),
-                        _buildSpecLine('Tegangan:', '110~240V'),
-                        _buildSpecLine('CRI:', '>80Ra'),
-                      ],
-                    ),
-                  ),
-                )
-              ],
+            // ===== Gambar + Spesifikasi (responsive) =====
+            LayoutBuilder(
+              builder: (context, c) {
+                final useRow = isTablet && c.maxWidth >= 680;
+
+                final image = Image.asset(
+                  'assets/images/spekabulb1.png',
+                  height: isTablet ? 220 : 170,
+                );
+
+                final specBox = _specBox();
+
+                if (useRow) {
+                  return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(flex: 4, child: image),
+                      const SizedBox(width: 16),
+                      Expanded(flex: 5, child: specBox),
+                    ],
+                  );
+                }
+                // Smartphone: gambar di atas, spesifikasi di bawah
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    image,
+                    const SizedBox(height: 12),
+                    specBox,
+                  ],
+                );
+              },
             ),
 
-            SizedBox(height: 30),
-            _buildTable(),
+            const SizedBox(height: 30),
 
-            SizedBox(height: 30),
+            // Tabel: bisa di-scroll horizontal di smartphone
+            _buildTable(isTablet),
+
+            const SizedBox(height: 30),
+
             Text(
               'Perbandingan:',
               style: TextStyle(
@@ -97,25 +94,42 @@ class ABulbScreen extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            SizedBox(height: 10),
-            Row(
-              children: [
-                Expanded(
-                  child: Image.asset('assets/images/nanobulbspek.png'),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: Image.asset('assets/images/productkomp.png'),
-                ),
-              ],
+            const SizedBox(height: 10),
+
+            // Perbandingan: Tablet 2 kolom, Smartphone 1 kolom (stack)
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final twoCols = isTablet && constraints.maxWidth >= 680;
+
+                final left = Image.asset('assets/images/nanobulbspek.png');
+                final right = Image.asset('assets/images/productkomp.png');
+
+                if (twoCols) {
+                  return Row(
+                    children: [
+                      Expanded(child: left),
+                      const SizedBox(width: 10),
+                      Expanded(child: right),
+                    ],
+                  );
+                }
+                return Column(
+                  children: [
+                    left,
+                    const SizedBox(height: 10),
+                    right,
+                  ],
+                );
+              },
             ),
-            SizedBox(height: 24),
+
+            const SizedBox(height: 24),
           ],
         ),
       ),
       bottomNavigationBar: Container(
         color: Colors.grey[200],
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -134,28 +148,90 @@ class ABulbScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSpecLine(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: Row(
-        children: [
-          Expanded(flex: 2, child: Text(title, style: TextStyle(fontWeight: FontWeight.bold))),
-          Expanded(flex: 3, child: Text(value)),
+  // ====== Widgets bantu ======
+  Widget _specBox() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Text('SPESIFIKASI',
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color(0xFF0D47A1))),
+          SizedBox(height: 8),
+          _SpecLine(title: 'Tahan Sampai:', value: '15.000 Jam'),
+          _SpecLine(title: 'Fitting:', value: 'E27'),
+          _SpecLine(title: 'Hemat Energi:', value: '90%'),
+          _SpecLine(title: 'Lumen:', value: '100lm/Watt'),
+          _SpecLine(title: 'Tegangan:', value: '110~240V'),
+          _SpecLine(title: 'CRI:', value: '>80Ra'),
         ],
       ),
     );
   }
 
-  Widget _buildTable() {
-    final headerStyle = TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
+  Widget _buildTable(bool isTablet) {
+    final headerStyle = const TextStyle(fontWeight: FontWeight.bold, color: Colors.black);
     final rows = [
-      ['3 Watt', '115mm', '60mm', '3000K', '6500K', 'Rp 12.900'],
-      ['5 Watt', '115mm', '60mm', '3000K', '6500K', 'Rp 14.900'],
-      ['7 Watt', '115mm', '55mm', '3000K', '6500K', 'Rp 16.900'],
-      ['9 Watt', '125.5mm', '65mm', '3000K', '6500K', 'Rp 18.900'],
-      ['12 Watt', '125.5mm', '65mm', '3000K', '6500K', 'Rp 19.900'],
-      ['15 Watt', '137.5mm', '69.8mm', '3000K', '6500K', 'Rp 25.900'],
+      ['3 Watt',  '115mm',  '60mm',   '3000K', '6500K', 'Rp 12.900'],
+      ['5 Watt',  '115mm',  '60mm',   '3000K', '6500K', 'Rp 14.900'],
+      ['7 Watt',  '115mm',  '55mm',   '3000K', '6500K', 'Rp 16.900'],
+      ['9 Watt',  '125.5mm','65mm',   '3000K', '6500K', 'Rp 18.900'],
+      ['12 Watt', '125.5mm','65mm',   '3000K', '6500K', 'Rp 19.900'],
+      ['15 Watt', '137.5mm','69.8mm', '3000K', '6500K', 'Rp 25.900'],
     ];
+
+    final table = Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: isTablet
+          ? {for (int i = 0; i < 6; i++) i: const FlexColumnWidth()}
+          : const {
+              0: FixedColumnWidth(110),
+              1: FixedColumnWidth(110),
+              2: FixedColumnWidth(120),
+              3: FixedColumnWidth(130),
+              4: FixedColumnWidth(140),
+              5: FixedColumnWidth(110),
+            },
+      children: [
+        TableRow(
+          decoration: BoxDecoration(color: Colors.grey[300]),
+          children: [
+            for (var header in const [
+              'Watt', 'Tinggi', 'Diameter', 'Warm White', 'Cool Day Light', 'Harga'
+            ])
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Center(child: Text(header, style: headerStyle)),
+              )
+          ],
+        ),
+        ...rows.map((row) {
+          return TableRow(
+            decoration: const BoxDecoration(color: Color(0xFF061F3D)),
+            children: row.map((cell) {
+              final isColor = cell == '3000K' || cell == '6500K';
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                child: Center(
+                  child: Text(
+                    cell,
+                    style: TextStyle(
+                      color: isColor
+                          ? (cell == '3000K' ? Colors.yellow[700] : Colors.blue[300])
+                          : Colors.white,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          );
+        }).toList(),
+      ],
+    );
 
     return Container(
       width: double.infinity,
@@ -163,47 +239,12 @@ class ABulbScreen extends StatelessWidget {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        columnWidths: {
-          for (int i = 0; i < 6; i++) i: FlexColumnWidth(),
-        },
-        children: [
-          TableRow(
-            decoration: BoxDecoration(color: Colors.grey[300]),
-            children: [
-              for (var header in [
-                'Watt', 'Tinggi', 'Diameter', 'Warm White', 'Cool Day Wight', 'Harga'
-              ])
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(child: Text(header, style: headerStyle)),
-                )
-            ],
-          ),
-          ...rows.map((row) {
-            return TableRow(
-              decoration: BoxDecoration(color: Color(0xFF061F3D)),
-              children: row.map((cell) {
-                final isColor = cell == '3000K' || cell == '6500K';
-                return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  child: Center(
-                    child: Text(
-                      cell,
-                      style: TextStyle(
-                        color: isColor
-                            ? (cell == '3000K' ? Colors.yellow[700] : Colors.blue[300])
-                            : Colors.white,
-                      ),
-                    ),
-                  ),
-                );
-              }).toList(),
-            );
-          }).toList(),
-        ],
-      ),
+      child: isTablet
+          ? table
+          : SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: table,
+            ),
     );
   }
 
@@ -214,8 +255,28 @@ class ABulbScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, color: Colors.black),
-          SizedBox(height: 4),
-          Text(label, style: TextStyle(color: Colors.black)),
+          const SizedBox(height: 4),
+          Text(label, style: const TextStyle(color: Colors.black)),
+        ],
+      ),
+    );
+  }
+}
+
+// Baris spesifikasi kecil
+class _SpecLine extends StatelessWidget {
+  final String title;
+  final String value;
+  const _SpecLine({required this.title, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: Row(
+        children: [
+          Expanded(flex: 2, child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold))),
+          Expanded(flex: 3, child: Text(value)),
         ],
       ),
     );

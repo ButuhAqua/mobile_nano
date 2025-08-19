@@ -1,4 +1,4 @@
-// lib/pages/floodlight.dart
+// lib/pages/tbulb.dart
 import 'package:flutter/material.dart';
 
 import 'categories_nano.dart';
@@ -6,12 +6,12 @@ import 'create_sales_order.dart';
 import 'home.dart';
 import 'profile.dart';
 
-class FloodLightPage extends StatelessWidget {
-  const FloodLightPage({super.key});
+class TBulbPage extends StatelessWidget {
+  const TBulbPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // ----- PALETTE -----
+    // ---- PALETTE ----
     const Color bgTop = Color(0xFF0B2741);
     const Color bgBottom = Color(0xFF0E3556);
     const Color card = Color(0xFF0F2D4B);
@@ -20,20 +20,18 @@ class FloodLightPage extends StatelessWidget {
     const Color pillText = Color(0xFF0F2D4B);
     const Color textPrimary = Colors.white;
 
-    // Tabel accents
+    // Table accents
     const Color headerDark = Color(0xFF0B2741);
-    const Color accentBlue = Color(0xFF03A9F4);   // 6500K
-    const Color accentYellow = Color(0xFFFFC107); // 3000K
+    const Color blue6500 = Color(0xFF03A9F4);
 
-    // ----- RESPONSIVE -----
-    final size = MediaQuery.of(context).size;
-    final bool isTablet = size.width >= 600;
+    // ---- RESPONSIVE ----
+    final bool isTablet = MediaQuery.of(context).size.width >= 600;
     final double hPad = isTablet ? 24 : 16;
     final double vPad = isTablet ? 18 : 12;
-    final double heroH = isTablet ? 360 : 230;   // gambar hero lebih besar di tablet
-    final double? compH = isTablet ? 280 : null; // tinggi kartu perbandingan di tablet
+    final double heroH = isTablet ? 360 : 240;
+    final double? compH = isTablet ? 300 : null;
 
-    // ----- HELPERS -----
+    // ---- SMALL HELPERS ----
     Widget brandChip() => Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(color: chip, borderRadius: BorderRadius.circular(32)),
@@ -50,25 +48,26 @@ class FloodLightPage extends StatelessWidget {
     Widget specPill() => Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(color: pillLight, borderRadius: BorderRadius.circular(20)),
-          child: const Text(
-            'SPESIFIKASI',
-            style: TextStyle(color: pillText, fontWeight: FontWeight.w800, letterSpacing: .3),
-          ),
+          child: const Text('SPESIFIKASI',
+              style: TextStyle(color: pillText, fontWeight: FontWeight.w800, letterSpacing: .3)),
         );
 
-    Widget bullet(String text, {bool bold = false}) => Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(padding: EdgeInsets.only(top: 6), child: Icon(Icons.circle, size: 6, color: Colors.white)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: TextStyle(color: textPrimary, fontWeight: bold ? FontWeight.w800 : FontWeight.w600),
-                softWrap: true,
-              ),
+    Widget bullet(String label, String value, {bool bold = false}) => Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: RichText(
+            text: TextSpan(
+              style: const TextStyle(color: Colors.white, height: 1.3),
+              children: [
+                TextSpan(
+                    text: '$label: ',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w800,
+                      color: bold ? Colors.white : Colors.white70,
+                    )),
+                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w600)),
+              ],
             ),
-          ],
+          ),
         );
 
     Widget productImage(String path, {double? height}) => Container(
@@ -80,15 +79,14 @@ class FloodLightPage extends StatelessWidget {
             child: Image.asset(
               path,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => const Center(
-                child: Icon(Icons.broken_image, color: Colors.white70, size: 48),
-              ),
+              errorBuilder: (_, __, ___) =>
+                  const Center(child: Icon(Icons.broken_image, color: Colors.white70, size: 48)),
             ),
           ),
         );
 
-    // Kartu spesifikasi (HANYA untuk hero / bagian atas)
-    Widget specCard(List<String> points, {double? height}) => Container(
+    // Spesifikasi HANYA untuk hero
+    Widget heroSpecCard({double? height}) => Container(
           height: height,
           decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
           padding: const EdgeInsets.all(16),
@@ -97,115 +95,80 @@ class FloodLightPage extends StatelessWidget {
             children: [
               Center(child: specPill()),
               SizedBox(height: isTablet ? 16 : 12),
-              for (int i = 0; i < points.length; i++) ...[
-                bullet(points[i], bold: i == 0),
-                const SizedBox(height: 8),
-              ],
+              // Pakai spesifikasi dari gambar "PIKOLITE"
+              bullet('Tahan Sampai', '15.000 Jam', bold: true),
+              bullet('Tegangan', '110v–240v'),
+              bullet('Hemat Energi', '90%'),
+              bullet('Fitting', 'E27'),
+              bullet('CRI', '>80Ra'),
               if (height != null) const Spacer(),
             ],
           ),
         );
 
-    // ====== TABEL VARIAN (seperti gambar) ======
+    // ====== TABLE (sesuai gambar #2) ======
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
           alignment: Alignment.center,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
-          ),
+          color: headerDark,
+          child: Text(text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
         );
 
     Widget tdText(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           alignment: Alignment.center,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12),
-          ),
+          child: Text(text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
         );
 
     Widget tdColor(String text, Color bg) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           alignment: Alignment.center,
           color: bg,
-          child: Text(
-            text,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
-          ),
+          child: Text(text,
+              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
         );
 
     Widget specTable() {
       final rows = [
-        {
-          'watt': '20 Watt',
-          'lumen': '2400lm',
-          'ukuran': '104mm x 120,4mm x 22,8mm',
-          'isi': '20',
-          'warna1': tdColor('6500K', accentBlue),
-          'ket1': 'Cahaya Putih Kebiruan',
-          'warna2': tdColor('3000K', accentYellow),
-          'ket2': 'Cahaya Putih Kekuningan',
-        },
-        {
-          'watt': '50 Watt',
-          'lumen': '6000lm',
-          'ukuran': '164,2mm x 194,9mm x 31,7mm',
-          'isi': '20',
-          'warna1': tdColor('6500K', accentBlue),
-          'ket1': 'Cahaya Putih Kebiruan',
-          'warna2': tdColor('3000K', accentYellow),
-          'ket2': 'Cahaya Putih Kekuningan',
-        },
-        {
-          'watt': '100 Watt',
-          'lumen': '12000lm',
-          'ukuran': '198,6mm x 233,8mm x 33mm',
-          'isi': '10',
-          'warna1': tdColor('6500K', accentBlue),
-          'ket1': 'Cahaya Putih Kebiruan',
-          'warna2': tdColor('3000K', accentYellow),
-          'ket2': 'Cahaya Putih Kekuningan',
-        },
+        ['5 Watt', '45mm x 100mm', 'Rp. 13,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['10 Watt', '59mm x 115mm', 'Rp. 20,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['15 Watt', '69mm x 133mm', 'Rp. 25,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['20 Watt', '80mm x 145mm', 'Rp. 32,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['30 Watt', '100mm x 180mm', 'Rp. 46,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['40 Watt', '113mm x 200mm', 'Rp. 65,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['50 Watt', '113mm x 215mm', 'Rp. 80,900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['60 Watt', '113,4mm x 215mm', 'Rp. 93,900', '6500K', 'Cahaya Putih Kebiruan'],
       ];
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         border: TableBorder.all(color: Colors.white24, width: 1),
         columnWidths: const {
-          0: FixedColumnWidth(120), // Varian Watt
-          1: FixedColumnWidth(100), // Lumen
-          2: FixedColumnWidth(260), // Ukuran
-          3: FixedColumnWidth(70),  // Isi/Dus
-          4: FixedColumnWidth(90),  // Warna (6500K)
-          5: FixedColumnWidth(200), // Keterangan 6500K
-          6: FixedColumnWidth(90),  // Warna (3000K)
-          7: FixedColumnWidth(200), // Keterangan 3000K
+          0: FixedColumnWidth(110), // Varian Watt
+          1: FixedColumnWidth(200), // Dimensi
+          2: FixedColumnWidth(130), // Harga
+          3: FixedColumnWidth(90),  // Warna
+          4: FixedColumnWidth(220), // Keterangan
         },
         children: [
           TableRow(children: [
             th('Varian Watt'),
-            th('Lumen'),
-            th('Ukuran'),
-            th('Isi/Dus'),
-            th('Warna'),
-            th('Keterangan'),
+            th('Dimensi Produk'),
+            th('Harga'),
             th('Warna'),
             th('Keterangan'),
           ]),
           for (final r in rows)
             TableRow(children: [
-              tdText(r['watt'] as String),
-              tdText(r['lumen'] as String),
-              tdText(r['ukuran'] as String),
-              tdText(r['isi'] as String),
-              r['warna1'] as Widget,
-              tdText(r['ket1'] as String),
-              r['warna2'] as Widget,
-              tdText(r['ket2'] as String),
+              tdText(r[0]),
+              tdText(r[1]),
+              tdText(r[2]),
+              tdColor(r[3], blue6500),
+              tdText(r[4]),
             ]),
         ],
       );
@@ -217,25 +180,18 @@ class FloodLightPage extends StatelessWidget {
       );
     }
 
-    // Kartu perbandingan tanpa spesifikasi (HANYA gambar + judul)
-    Widget comparisonImageBlock({
-      required String title,
-      required String imagePath,
-    }) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(color: textPrimary, fontWeight: FontWeight.w800, fontSize: isTablet ? 18 : 16),
-          ),
-          SizedBox(height: vPad),
-          productImage(imagePath, height: compH),
-        ],
-      );
-    }
+    // Perbandingan: gambar saja
+    Widget comparisonImageBlock({required String title, required String imagePath}) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title,
+                style: TextStyle(color: textPrimary, fontWeight: FontWeight.w800, fontSize: isTablet ? 18 : 16)),
+            SizedBox(height: vPad),
+            productImage(imagePath, height: compH),
+          ],
+        );
 
-    // ----- PAGE -----
+    // ---- PAGE ----
     return Scaffold(
       backgroundColor: bgBottom,
       appBar: AppBar(
@@ -247,17 +203,13 @@ class FloodLightPage extends StatelessWidget {
             if (Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (_) => const CategoriesNanoScreen()),
-              );
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const CategoriesNanoScreen()));
             }
           },
         ),
         title: const Text('nanopiko', style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
-
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [bgTop, bgBottom]),
@@ -268,22 +220,15 @@ class FloodLightPage extends StatelessWidget {
             brandChip(),
             SizedBox(height: vPad),
 
-            Text('Product Flood Light',
+            Text('Product T-Bulb',
                 style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
 
-            // HERO: gambar + spesifikasi (row di tablet, column di HP)
+            // HERO: gambar + spesifikasi
             LayoutBuilder(builder: (context, c) {
               final row = isTablet && c.maxWidth >= 680;
-              final img = productImage('assets/images/floodlightnano.jpg', height: row ? heroH : null);
-              final spec = specCard(const [
-                'Tahan Sampai: 30.000 Jam',
-                'Power Faktor: >0.5',
-                'Tegangan: 100-250V',
-                'Jenis: Lampu Sorot',
-                'CRI: >80',
-                'IP: 65',
-              ], height: row ? heroH : null);
+              final img = productImage('assets/images/tbulbpiko.jpg', height: row ? heroH : null);
+              final spec = heroSpecCard(height: row ? heroH : null);
 
               if (row) {
                 return Row(children: [
@@ -295,43 +240,30 @@ class FloodLightPage extends StatelessWidget {
               return Column(children: [img, SizedBox(height: vPad), spec]);
             }),
 
-            SizedBox(height: vPad * 1.5),
-
-            // ===== TABEL VARIAN (di tengah, di atas perbandingan) =====
+            SizedBox(height: vPad),
+            // TABEL di tengah (sebelum perbandingan)
             specTable(),
 
             SizedBox(height: vPad * 1.5),
 
-            // PERBANDINGAN (NANOLITE kiri, PRODUK LAIN kanan)
+            // PERBANDINGAN — tablet 2 kolom, mobile 1 kolom; NANOLITE di kiri
             if (isTablet) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: comparisonImageBlock(
-                      title: 'NANOLITE',
-                      imagePath: 'assets/images/flnano.jpg',
-                    ),
+                    child: comparisonImageBlock(title: 'NANOLITE', imagePath: 'assets/images/tpiko.jpg'),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: comparisonImageBlock(
-                      title: 'PRODUK LAIN',
-                      imagePath: 'assets/images/flkom.jpg',
-                    ),
+                    child: comparisonImageBlock(title: 'PRODUK LAIN', imagePath: 'assets/images/tkom.jpg'),
                   ),
                 ],
               ),
             ] else ...[
-              comparisonImageBlock(
-                title: 'NANOLITE',
-                imagePath: 'assets/images/flnano.jpg',
-              ),
+              comparisonImageBlock(title: 'NANOLITE', imagePath: 'assets/images/tpiko.jpg'),
               SizedBox(height: vPad * 1.5),
-              comparisonImageBlock(
-                title: 'PRODUK LAIN',
-                imagePath: 'assets/images/flkom.jpg',
-              ),
+              comparisonImageBlock(title: 'PRODUK LAIN', imagePath: 'assets/images/tkom.jpg'),
             ],
           ],
         ),
