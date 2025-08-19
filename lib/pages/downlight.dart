@@ -11,189 +11,174 @@ class DownlightPikoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ---- THEME ----
-    const Color bgTop = Color(0xFF0B2741);
-    const Color bgBottom = Color(0xFF0E3556);
-    const Color card = Color(0xFF0F2D4B);
-    const Color chip = Color(0xFF163E66);
-    const Color textPrimary = Colors.white;
+    // ==== THEME (meniru desain contoh A-Bulb) ====
+    const Color bg = Color(0xFF061F3D);          // latar utama
+    const Color cardDark = Color(0xFF12355C);    // kartu gelap utk gambar
+    const Color headerLight = Color(0xFFE9ECEF); // header tabel terang
+    const Color blue6500 = Color(0xFF1EA7FF);    // highlight 6500K
+    const Color yellow3000 = Color(0xFFFFC107);  // highlight 3000K
 
-    // Table colors
-    const Color headerDark = Color(0xFF0B2741);
-    const Color blue6500 = Color(0xFF03A9F4);
-    const Color yellow3000 = Color(0xFFFFC107);
-
-    // ---- RESPONSIVE ----
     final size = MediaQuery.of(context).size;
     final bool isTablet = size.width >= 600;
     final double hPad = isTablet ? 24 : 16;
     final double vPad = isTablet ? 18 : 12;
-    final double heroH = isTablet ? 360 : 240;
-    final double? compH = isTablet ? 280 : null;
 
-    // ---- HELPERS ----
-    Widget brandChip() => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(color: chip, borderRadius: BorderRadius.circular(32)),
+    // ---- helpers ----
+    Widget brandPill() => Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(30)),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.lightbulb_outline, color: Colors.white),
+              Icon(Icons.lightbulb_outline, color: Colors.black),
               SizedBox(width: 8),
-              Text('Pikolite', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              Text('Pikolite', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
             ],
           ),
         );
 
-    Widget specPill() => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
-          child: const Text('Spesifikasi', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800)),
-        );
-
-    Widget bullet(String title, String value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-              children: [
-                const TextSpan(text: '• ', style: TextStyle(fontWeight: FontWeight.w800)),
-                TextSpan(text: '$title: ', style: const TextStyle(fontWeight: FontWeight.w800)),
-                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-        );
-
-    Widget productImage(String path, {double? height}) => Container(
-          height: height,
-          decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
+    Widget imageCard() => Container(
+          decoration: BoxDecoration(color: cardDark, borderRadius: BorderRadius.circular(16)),
           padding: const EdgeInsets.all(16),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              path,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) =>
-                  const Center(child: Icon(Icons.broken_image, color: Colors.white70, size: 48)),
+          child: Image.asset(
+            'assets/images/downlightpiko.jpg',
+            height: isTablet ? 220 : 190,
+            fit: BoxFit.contain,
+          ),
+        );
+
+    Widget specCard() {
+      Text _row(String l, String r) => Text.rich(TextSpan(children: [
+            TextSpan(text: '$l: ', style: const TextStyle(fontWeight: FontWeight.w800, color: Colors.black87)),
+            TextSpan(text: r, style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.black87)),
+          ]));
+
+      return Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+              child: Text('SPESIFIKASI',
+                  style: TextStyle(color: Colors.blueGrey.shade800, fontWeight: FontWeight.w700)),
             ),
-          ),
-        );
+            const SizedBox(height: 10),
+            _row('Tahan Sampai', '15.000 Jam'),
+            const SizedBox(height: 6),
+            _row('Voltase', '165v–250v (50/60Hz)'),
+            const SizedBox(height: 6),
+            _row('Fluks Cahaya', '600Lm'),
+            const SizedBox(height: 6),
+            _row('Hemat Energi', '90%'),
+            const SizedBox(height: 6),
+            _row('CRI', '>85'),
+          ],
+        ),
+      );
+    }
 
-    // Spesifikasi HANYA untuk hero (sesuai gambar 1)
-    Widget specCard({double? height}) => Container(
-          height: height,
-          decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: specPill()),
-              SizedBox(height: isTablet ? 16 : 12),
-              bullet('Tahan Sampai', '15.000 Jam'),
-              bullet('Voltase', '165v–250v (50/60Hz)'),
-              bullet('Fluks Cahaya', '600Lm'),
-              bullet('Hemat Energi', '90%'),
-              bullet('CRI', '>85'),
-              if (height != null) const Spacer(),
-            ],
-          ),
+    // table cell helpers
+    Widget th(String t) => Container(
+          color: headerLight,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: Center(child: Text(t, style: const TextStyle(fontWeight: FontWeight.w700))),
         );
-
-    // ------- TABLE (sesuai gambar 2) -------
-    Widget th(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
-          alignment: Alignment.center,
-          child: Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+    Widget td(String t) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: Center(child: Text(t, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600))),
         );
-
-    Widget tdText(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          alignment: Alignment.center,
-          child: Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+    Widget tdBlue(String t) => Container(
+          color: blue6500,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: Center(child: Text(t, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800))),
         );
-
-    Widget tdColor(String text, Color bg, {bool darkText = false}) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          alignment: Alignment.center,
-          color: bg,
-          child: Text(text,
-              style: TextStyle(
-                color: darkText ? Colors.black : Colors.white,
-                fontWeight: FontWeight.w800,
-                fontSize: 12,
-              )),
+    Widget tdYellow(String t) => Container(
+          color: yellow3000,
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+          child: const Center(child: Text('3000K', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w800))),
         );
 
     Widget specTable() {
+      // Menyerupai struktur tabel A-Bulb: Watt | Tinggi | Diameter | Warm White | Cool Day Light | Harga
       final rows = [
-        ['6 Watt', '108mm x 25mm', 'Rp 23.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
-        ['9 Watt', '125mm x 25mm', 'Rp 30.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
-        ['12 Watt', '150mm x 25mm', 'Rp 40.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
-        ['18 Watt', '175mm x 25mm', 'Rp 49.900', '6500K', 'Cahaya Putih Kebiruan', '3000K', 'Cahaya Putih Kekuningan'],
+        ['6 Watt',  '108mm', '25mm', '3000K', '6500K', 'Rp 23.900'],
+        ['9 Watt',  '125mm', '25mm', '3000K', '6500K', 'Rp 30.900'],
+        ['12 Watt', '150mm', '25mm', '3000K', '6500K', 'Rp 40.900'],
+        ['18 Watt', '175mm', '25mm', '3000K', '6500K', 'Rp 49.900'],
       ];
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         border: TableBorder.all(color: Colors.white24, width: 1),
-        columnWidths: const {
-          0: FixedColumnWidth(110), // Varian Watt
-          1: FixedColumnWidth(200), // Dimensi Produk
-          2: FixedColumnWidth(120), // Harga
-          3: FixedColumnWidth(90),  // Warna 6500K
-          4: FixedColumnWidth(220), // Keterangan 6500K
-          5: FixedColumnWidth(90),  // Warna 3000K
-          6: FixedColumnWidth(220), // Keterangan 3000K
-        },
+        columnWidths: isTablet
+            ? {
+                0: const FlexColumnWidth(1.1),
+                1: const FlexColumnWidth(1.2),
+                2: const FlexColumnWidth(1.2),
+                3: const FlexColumnWidth(1.6),
+                4: const FlexColumnWidth(1.6),
+                5: const FlexColumnWidth(1.4),
+              }
+            : const {
+                0: FixedColumnWidth(110),
+                1: FixedColumnWidth(110),
+                2: FixedColumnWidth(120),
+                3: FixedColumnWidth(130),
+                4: FixedColumnWidth(130),
+                5: FixedColumnWidth(120),
+              },
         children: [
           TableRow(children: [
-            th('Varian Watt'),
-            th('Dimensi Produk'),
+            th('Watt'),
+            th('Tinggi'),
+            th('Diameter'),
+            th('Warm White'),
+            th('Cool Day Light'),
             th('Harga'),
-            th('Warna'),
-            th('Keterangan'),
-            th('Warna'),
-            th('Keterangan'),
           ]),
           for (final r in rows)
-            TableRow(children: [
-              tdText(r[0]),
-              tdText(r[1]),
-              tdText(r[2]),
-              tdColor(r[3], blue6500),
-              tdText(r[4]),
-              tdColor(r[5], yellow3000, darkText: true),
-              tdText(r[6]),
-            ]),
+            TableRow(
+              decoration: const BoxDecoration(color: Color(0xFF0C2B49)),
+              children: [
+                td(r[0]),
+                td(r[1]),
+                td(r[2]),
+                tdYellow(r[3]),
+                tdBlue(r[4]),
+                td(r[5]),
+              ],
+            ),
         ],
       );
 
       return Container(
-        decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
+        decoration: BoxDecoration(color: const Color(0xFF0F2D4B), borderRadius: BorderRadius.circular(16)),
         padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: table),
+        child: isTablet ? table : SingleChildScrollView(scrollDirection: Axis.horizontal, child: table),
       );
     }
 
-    // ------- COMPARISON (gambar saja; 2 kolom tablet, 1 kolom mobile) -------
-    Widget compareCard(String title, String imgPath) => Column(
+    Widget compareImage(String title, String path) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(title,
-                style: TextStyle(color: textPrimary, fontWeight: FontWeight.w800, fontSize: isTablet ? 18 : 16)),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
-            productImage(imgPath, height: compH),
+            Container(
+              decoration: BoxDecoration(color: cardDark, borderRadius: BorderRadius.circular(16)),
+              padding: const EdgeInsets.all(16),
+              child: Image.asset(path, height: isTablet ? 200 : 170, fit: BoxFit.contain),
+            ),
           ],
         );
 
-    // ---- PAGE ----
+    // ==== PAGE ====
     return Scaffold(
-      backgroundColor: bgBottom,
+      backgroundColor: bg,
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
         elevation: 0,
@@ -207,73 +192,72 @@ class DownlightPikoPage extends StatelessWidget {
             }
           },
         ),
-        title: const Text('pikolite', style: TextStyle(color: Colors.black)),
+        title: const Text('nanopiko', style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad + 16),
+        children: [
+          brandPill(),
+          SizedBox(height: vPad),
 
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [bgTop, bgBottom]),
-        ),
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad + 16),
-          children: [
-            brandChip(),
-            SizedBox(height: vPad),
+          Text('Product Downlight',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
+          SizedBox(height: vPad),
 
-            Text('Product Downlight',
-                style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
-            SizedBox(height: vPad),
+          // HERO: tablet berdampingan; smartphone stack (gambar center + lebih besar)
+          LayoutBuilder(builder: (context, c) {
+            final useRow = isTablet && c.maxWidth >= 680;
 
-            // HERO (gambar + spesifikasi)
-            LayoutBuilder(builder: (context, c) {
-              final row = isTablet && c.maxWidth >= 680;
-              final img = productImage('assets/images/downlightpiko.jpg', height: row ? heroH : null);
-              final spec = specCard(height: row ? heroH : null);
-
-              if (row) {
-                return Row(children: [
-                  Expanded(child: img),
-                  const SizedBox(width: 12),
-                  Expanded(child: spec),
-                ]);
-              }
-              return Column(children: [img, SizedBox(height: vPad), spec]);
-            }),
-
-            SizedBox(height: vPad * 1.2),
-
-            // TABLE di tengah
-            specTable(),
-
-            SizedBox(height: vPad * 1.5),
-
-            // COMPARISON
-            LayoutBuilder(builder: (context, c) {
-              final twoCols = isTablet && c.maxWidth >= 680;
-              if (twoCols) {
-                return Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: compareCard('PIKOLITE', 'assets/images/downpiko.jpg')),
-                    const SizedBox(width: 16),
-                    Expanded(child: compareCard('PRODUK LAIN', 'assets/images/downkom.jpg')),
-                  ],
-                );
-              }
-              return Column(
+            if (useRow) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  compareCard('PIKOLITE', 'assets/images/downpiko.jpg'),
-                  SizedBox(height: vPad * 1.5),
-                  compareCard('PRODUK LAIN', 'assets/images/downkom.jpg'),
+                  Expanded(child: imageCard()),
+                  const SizedBox(width: 16),
+                  Expanded(child: specCard()),
                 ],
               );
-            }),
-          ],
-        ),
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(child: imageCard()),
+                const SizedBox(height: 12),
+                specCard(),
+              ],
+            );
+          }),
+
+          SizedBox(height: vPad * 1.2),
+
+          // TABLE (HP scroll horizontal)
+          specTable(),
+
+          SizedBox(height: vPad * 1.5),
+
+          // PERBANDINGAN — tablet 2 kolom, smartphone 1 kolom (stack)
+          LayoutBuilder(builder: (context, c) {
+            final twoCols = isTablet && c.maxWidth >= 680;
+            final left = compareImage('PIKOLITE', 'assets/images/downpiko.jpg');
+            final right = compareImage('PRODUK LAIN', 'assets/images/downkom.jpg');
+
+            if (twoCols) {
+              return Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: left),
+                  const SizedBox(width: 16),
+                  Expanded(child: right),
+                ],
+              );
+            }
+            return Column(children: [left, const SizedBox(height: 12), right]);
+          }),
+        ],
       ),
 
-      // Bottom Navigation (kapsul)
+      // bottom navigation (kapsul)
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(

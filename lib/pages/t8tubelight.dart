@@ -22,7 +22,8 @@ class T8TubeLightPage extends StatelessWidget {
     const Color textSecondary = Color(0xFFB8D1EA);
 
     // Table accents
-    const Color headerDark = Color(0xFF0B2741);
+    const Color headerBg = Colors.white; // putih
+    const Color headerText = Colors.black; // hitam
     const Color accentBlue = Color(0xFF03A9F4); // 7000K biru penuh
 
     // RESPONSIVE
@@ -111,11 +112,17 @@ class T8TubeLightPage extends StatelessWidget {
     // ===== TABEL VARIAN (sesuai gambar) =====
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
+          color: headerBg,
           alignment: Alignment.center,
-          child: Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: headerText,
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+            ),
+          ),
         );
 
     Widget tdText(String text) => Container(
@@ -137,7 +144,7 @@ class T8TubeLightPage extends StatelessWidget {
     Widget specTable() {
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
+        border: TableBorder.all(color: Colors.white, width: 1), // garis putih antar kolom
         columnWidths: const {
           0: FixedColumnWidth(120), // Varian Watt
           1: FixedColumnWidth(140), // Lumen

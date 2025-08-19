@@ -106,14 +106,18 @@ class StreetLight711Page extends StatelessWidget {
 
     // ===== TABEL VARIAN =====
     Widget th(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
-          ),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      color: Colors.white, // ubah background header jadi putih
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.black, // teks hitam
+          fontWeight: FontWeight.w800,
+          fontSize: 12,
+        ),
+      ),
+    );
 
     Widget td(String text, {bool highlight = false}) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -136,36 +140,37 @@ class StreetLight711Page extends StatelessWidget {
       ];
 
       final table = Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
-        columnWidths: const {
-          0: FixedColumnWidth(110),
-          1: FixedColumnWidth(130),
-          2: FixedColumnWidth(200),
-          3: FixedColumnWidth(80),
-          4: FixedColumnWidth(100),
-          5: FixedColumnWidth(180),
-        },
-        children: [
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      border: TableBorder.all(color: Colors.white, width: 1), // border antar sel putih
+      columnWidths: const {
+        0: FixedColumnWidth(110),
+        1: FixedColumnWidth(130),
+        2: FixedColumnWidth(200),
+        3: FixedColumnWidth(80),
+        4: FixedColumnWidth(100),
+        5: FixedColumnWidth(180),
+      },
+      children: [
+        TableRow(children: [
+          th('Varian Watt'),
+          th('Lumen'),
+          th('Ukuran'),
+          th('Isi/Dus'),
+          th('Warna'),
+          th('Keterangan'),
+        ]),
+        for (final r in rows)
           TableRow(children: [
-            th('Varian Watt'),
-            th('Lumen'),
-            th('Ukuran'),
-            th('Isi/Dus'),
-            th('Warna'),
-            th('Keterangan'),
+            td(r[0]),
+            td(r[1]),
+            td(r[2]),
+            td(r[3]),
+            td(r[4], highlight: true),
+            td(r[5]),
           ]),
-          for (final r in rows)
-            TableRow(children: [
-              td(r[0]),
-              td(r[1]),
-              td(r[2]),
-              td(r[3]),
-              td(r[4], highlight: true),
-              td(r[5]),
-            ]),
-        ],
-      );
+      ],
+    );
+
 
       return Container(
         decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),

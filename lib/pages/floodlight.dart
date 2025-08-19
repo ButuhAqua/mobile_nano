@@ -21,8 +21,10 @@ class FloodLightPage extends StatelessWidget {
     const Color textPrimary = Colors.white;
 
     // Tabel accents
-    const Color headerDark = Color(0xFF0B2741);
-    const Color accentBlue = Color(0xFF03A9F4);   // 6500K
+    const Color headerDark = Colors.white; // Header background putih
+    const Color headerTextColor = Colors.black; // Header font hitam
+    const Color borderColor = Colors.white; // Garis sekat putih
+    const Color accentBlue = Color(0xFF03A9F4); // 6500K
     const Color accentYellow = Color(0xFFFFC107); // 3000K
 
     // ----- RESPONSIVE -----
@@ -30,7 +32,7 @@ class FloodLightPage extends StatelessWidget {
     final bool isTablet = size.width >= 600;
     final double hPad = isTablet ? 24 : 16;
     final double vPad = isTablet ? 18 : 12;
-    final double heroH = isTablet ? 360 : 230;   // gambar hero lebih besar di tablet
+    final double heroH = isTablet ? 360 : 230; // gambar hero lebih besar di tablet
     final double? compH = isTablet ? 280 : null; // tinggi kartu perbandingan di tablet
 
     // ----- HELPERS -----
@@ -106,15 +108,19 @@ class FloodLightPage extends StatelessWidget {
           ),
         );
 
-    // ====== TABEL VARIAN (seperti gambar) ======
+    // ====== TABEL VARIAN ======
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
+          color: headerDark, // putih
           alignment: Alignment.center,
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
+            style: const TextStyle(
+              color: headerTextColor, // hitam
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+            ),
           ),
         );
 
@@ -174,16 +180,16 @@ class FloodLightPage extends StatelessWidget {
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
+        border: TableBorder.all(color: borderColor, width: 1), // garis putih
         columnWidths: const {
-          0: FixedColumnWidth(120), // Varian Watt
-          1: FixedColumnWidth(100), // Lumen
-          2: FixedColumnWidth(260), // Ukuran
-          3: FixedColumnWidth(70),  // Isi/Dus
-          4: FixedColumnWidth(90),  // Warna (6500K)
-          5: FixedColumnWidth(200), // Keterangan 6500K
-          6: FixedColumnWidth(90),  // Warna (3000K)
-          7: FixedColumnWidth(200), // Keterangan 3000K
+          0: FixedColumnWidth(120),
+          1: FixedColumnWidth(100),
+          2: FixedColumnWidth(260),
+          3: FixedColumnWidth(70),
+          4: FixedColumnWidth(90),
+          5: FixedColumnWidth(200),
+          6: FixedColumnWidth(90),
+          7: FixedColumnWidth(200),
         },
         children: [
           TableRow(children: [
@@ -217,7 +223,7 @@ class FloodLightPage extends StatelessWidget {
       );
     }
 
-    // Kartu perbandingan tanpa spesifikasi (HANYA gambar + judul)
+    // Kartu perbandingan
     Widget comparisonImageBlock({
       required String title,
       required String imagePath,
@@ -272,7 +278,7 @@ class FloodLightPage extends StatelessWidget {
                 style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
 
-            // HERO: gambar + spesifikasi (row di tablet, column di HP)
+            // HERO
             LayoutBuilder(builder: (context, c) {
               final row = isTablet && c.maxWidth >= 680;
               final img = productImage('assets/images/floodlightnano.jpg', height: row ? heroH : null);
@@ -297,12 +303,12 @@ class FloodLightPage extends StatelessWidget {
 
             SizedBox(height: vPad * 1.5),
 
-            // ===== TABEL VARIAN (di tengah, di atas perbandingan) =====
+            // TABEL VARIAN
             specTable(),
 
             SizedBox(height: vPad * 1.5),
 
-            // PERBANDINGAN (NANOLITE kiri, PRODUK LAIN kanan)
+            // PERBANDINGAN
             if (isTablet) ...[
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,7 +343,7 @@ class FloodLightPage extends StatelessWidget {
         ),
       ),
 
-      // Bottom Navigation (kapsul)
+      // Bottom Navigation
       bottomNavigationBar: SafeArea(
         top: false,
         child: Container(

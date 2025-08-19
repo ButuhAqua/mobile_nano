@@ -11,140 +11,176 @@ class MultipackPikoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ---- THEME ----
-    const Color bgTop = Color(0xFF0B2741);
-    const Color bgBottom = Color(0xFF0E3556);
-    const Color card = Color(0xFF0F2D4B);
-    const Color chip = Color(0xFF163E66);
-    const Color textPrimary = Colors.white;
+    // === PALETTE: samakan dengan Bulb/TBulb ===
+    const Color bgPage = Color(0xFF0A1B2D);
+    const Color headerLight = Color(0xFFE9ECEF);
+    const Color blue6500 = Color(0xFF1EA7FF);
 
-    // Table colors
-    const Color headerDark = Color(0xFF0B2741);
-    const Color blue6500 = Color(0xFF03A9F4);
-
-    // ---- RESPONSIVE ----
     final size = MediaQuery.of(context).size;
     final bool isTablet = size.width >= 600;
     final double hPad = isTablet ? 24 : 16;
     final double vPad = isTablet ? 18 : 12;
-    final double heroH = isTablet ? 360 : 240;
 
-    // ---- HELPERS ----
+    // Brand chip abu-abu (ikon & teks hitam)
     Widget brandChip() => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(color: chip, borderRadius: BorderRadius.circular(32)),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(24)),
           child: const Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.lightbulb_outline, color: Colors.white),
+              Icon(Icons.lightbulb_outline, color: Colors.black),
               SizedBox(width: 8),
-              Text('Pikolite', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              Text('Pikolite', style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)),
             ],
           ),
         );
 
-    Widget specPill() => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(20)),
-          child:
-              const Text('Spesifikasi', style: TextStyle(color: Colors.black87, fontWeight: FontWeight.w800)),
+    // HERO image: nyatu dengan background
+    Widget productImage() => Container(
+          decoration: BoxDecoration(color: bgPage, borderRadius: BorderRadius.circular(16)),
+          padding: const EdgeInsets.all(12),
+          child: Image.asset('assets/images/multipikko.jpg', height: isTablet ? 260 : 210, fit: BoxFit.contain),
         );
 
-    Widget bullet(String title, String value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6),
-          child: RichText(
-            text: TextSpan(
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-              children: [
-                const TextSpan(text: '• ', style: TextStyle(fontWeight: FontWeight.w800)),
-                TextSpan(text: '$title: ', style: const TextStyle(fontWeight: FontWeight.w800)),
-                TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w600)),
-              ],
-            ),
-          ),
-        );
+    // Kartu spesifikasi: header bar abu-abu muda + body putih
+    Widget specCard() {
+      Widget header = Container(
+        width: double.infinity,
+        height: 42,
+        decoration: const BoxDecoration(
+          color: headerLight,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        ),
+        child: const Center(
+          child: Text('SPESIFIKASI', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black)),
+        ),
+      );
 
-    Widget productImage(String path, {double? height}) => Container(
-          height: height,
-          decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
-          padding: const EdgeInsets.all(16),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.asset(
-              path,
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) =>
-                  const Center(child: Icon(Icons.broken_image, color: Colors.white70, size: 48)),
-            ),
-          ),
-        );
-
-    // Spesifikasi HANYA untuk hero
-    Widget specCard({double? height}) => Container(
-          height: height,
-          decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
-          padding: const EdgeInsets.all(16),
+      return Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(child: specPill()),
-              SizedBox(height: isTablet ? 16 : 12),
-              bullet('Tahan Sampai', '15.000 Jam'),
-              bullet('Fitting', 'E27'),
-              bullet('Hemat Energi', '90%'),
-              bullet('Lumen', '100Lm/watt'),
-              bullet('Tegangan', '110–240V'),
-              if (height != null) const Spacer(),
+            children: const [
+              // header
+              SizedBox(height: 0, child: SizedBox.shrink()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // versi dengan isi
+    Widget specCardFilled() {
+      Widget header = Container(
+        width: double.infinity,
+        height: 42,
+        decoration: const BoxDecoration(
+          color: headerLight,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+        ),
+        child: const Center(
+          child: Text('SPESIFIKASI', style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black)),
+        ),
+      );
+
+      return Container(
+        decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              // header sudah di atas
+              SizedBox(height: 0, child: SizedBox.shrink()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // helper row untuk spesifikasi
+    Widget specRows() => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              _SpecRow(label: 'Tahan Sampai', value: '25.000 Jam'),
+              _SpecRow(label: 'Fitting', value: 'E27'),
+              _SpecRow(label: 'Hemat Energi', value: '90%'),
+              _SpecRow(label: 'LED', value: 'Samsung'),
+              _SpecRow(label: 'Tegangan', value: '110–240V'),
             ],
           ),
         );
 
-    // ------- TABLE (sesuai gambar) -------
-    Widget th(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
-          alignment: Alignment.center,
-          child: Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+    // ====== TABLE builders (gaya ABulb/TBulb) ======
+    Widget th(String t) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 44),
+          child: Container(
+            color: headerLight,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(t,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, height: 1.1)),
+          ),
         );
 
-    Widget tdText(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          alignment: Alignment.center,
-          child: Text(text,
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12)),
+    Widget td(String t) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 42),
+          child: Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(t,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, height: 1.1)),
+          ),
         );
 
-    // sel warna dengan background biru penuh
-    Widget tdColor(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          alignment: Alignment.center,
-          color: blue6500,
-          child: Text(text,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+    Widget tdBlue(String t) => ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 42),
+          child: Container(
+            alignment: Alignment.center,
+            color: blue6500,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(t, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, height: 1.1)),
+          ),
         );
 
+    // ====== TABLE data & layout ======
     Widget specTable() {
-      // <-- DATA diganti sesuai gambar: 5W, 7W, 9W, 12W
-      final rows = [
-        ['5 Watt',  '55mm x 102mm', 'Rp. 45,900', '6500K', 'Cahaya Putih Kebiruan'],
-        ['7 Watt',  '59mm x 115mm', 'Rp. 51,900', '6500K', 'Cahaya Putih Kebiruan'],
-        ['9 Watt',  '59mm x 115mm', 'Rp. 59,900', '6500K', 'Cahaya Putih Kebiruan'],
-        ['12 Watt', '64mm x 123mm', 'Rp. 68,900', '6500K', 'Cahaya Putih Kebiruan'],
+      const rows = [
+        ['5 Watt',  '55mm x 102mm', 'Rp 45.900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['7 Watt',  '59mm x 115mm', 'Rp 51.900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['9 Watt',  '59mm x 115mm', 'Rp 59.900', '6500K', 'Cahaya Putih Kebiruan'],
+        ['12 Watt', '64mm x 123mm', 'Rp 68.900', '6500K', 'Cahaya Putih Kebiruan'],
       ];
 
+      // Lebar kolom (HP fixed + scroll; Tablet fleksibel)
+      const phoneWidths = <int, TableColumnWidth>{
+        0: FixedColumnWidth(140), // Varian Watt
+        1: FixedColumnWidth(220), // Dimensi Produk
+        2: FixedColumnWidth(160), // Harga
+        3: FixedColumnWidth(110), // Warna
+        4: FixedColumnWidth(240), // Keterangan
+      };
+      final tabletWidths = <int, TableColumnWidth>{
+        0: const FlexColumnWidth(1.1),
+        1: const FlexColumnWidth(1.6),
+        2: const FlexColumnWidth(1.2),
+        3: const FlexColumnWidth(0.9),
+        4: const FlexColumnWidth(1.7),
+      };
+
       final table = Table(
+        columnWidths: isTablet ? tabletWidths : phoneWidths,
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
-        columnWidths: const {
-          0: FixedColumnWidth(120), // Varian Watt
-          1: FixedColumnWidth(220), // Dimensi Produk
-          2: FixedColumnWidth(140), // Harga
-          3: FixedColumnWidth(90),  // Warna
-          4: FixedColumnWidth(240), // Keterangan
-        },
+        border: const TableBorder.symmetric(
+          inside: BorderSide(color: Colors.white24, width: 1),
+          outside: BorderSide(color: Colors.white24, width: 1),
+        ),
         children: [
           TableRow(children: [
             th('Varian Watt'),
@@ -154,26 +190,28 @@ class MultipackPikoPage extends StatelessWidget {
             th('Keterangan'),
           ]),
           for (final r in rows)
-            TableRow(children: [
-              tdText(r[0]),
-              tdText(r[1]),
-              tdText(r[2]),
-              tdColor(r[3]),
-              tdText(r[4]),
-            ]),
+            TableRow(
+              decoration: const BoxDecoration(color: bgPage),
+              children: [td(r[0]), td(r[1]), td(r[2]), tdBlue(r[3]), td(r[4])],
+            ),
         ],
       );
 
       return Container(
-        decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),
+        decoration: BoxDecoration(color: bgPage, borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.all(10),
-        child: SingleChildScrollView(scrollDirection: Axis.horizontal, child: table),
+        child: isTablet
+            ? table
+            : SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(constraints: const BoxConstraints(minWidth: 870), child: table),
+              ),
       );
     }
 
     // ---- PAGE ----
     return Scaffold(
-      backgroundColor: bgBottom,
+      backgroundColor: bgPage,
       appBar: AppBar(
         backgroundColor: Colors.grey[200],
         elevation: 0,
@@ -184,50 +222,63 @@ class MultipackPikoPage extends StatelessWidget {
               Navigator.of(context).pop();
             } else {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (_) => CategoriesPikoScreen()));
+                context,
+                MaterialPageRoute(builder: (_) => CategoriesPikoScreen()),
+              );
             }
           },
         ),
         title: const Text('pikolite', style: TextStyle(color: Colors.black)),
         centerTitle: false,
       ),
+      body: ListView(
+        padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad + 16),
+        children: [
+          brandChip(),
+          SizedBox(height: vPad),
+          Text('Product Multipack',
+              style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
+          SizedBox(height: vPad),
 
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [bgTop, bgBottom]),
-        ),
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(hPad, vPad, hPad, vPad + 16),
-          children: [
-            brandChip(),
-            SizedBox(height: vPad),
+          // HERO (row di tablet, stack di HP)
+          LayoutBuilder(builder: (context, c) {
+            final row = isTablet && c.maxWidth >= 680;
+            final img = productImage();
 
-            Text('Product Multipack',
-                style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
-            SizedBox(height: vPad),
+            // spec card lengkap (header + isi)
+            final spec = Container(
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: 42,
+                    decoration: const BoxDecoration(
+                      color: headerLight,
+                      borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                    ),
+                    child: const Center(
+                      child: Text('SPESIFIKASI',
+                          style: TextStyle(fontWeight: FontWeight.w700, color: Colors.black)),
+                    ),
+                  ),
+                  specRows(),
+                ],
+              ),
+            );
 
-            // HERO (gambar + spesifikasi)
-            LayoutBuilder(builder: (context, c) {
-              final row = isTablet && c.maxWidth >= 680;
-              final img = productImage('assets/images/multipikko.jpg', height: row ? heroH : null);
-              final spec = specCard(height: row ? heroH : null);
+            if (row) {
+              return Row(children: [Expanded(child: img), const SizedBox(width: 16), Expanded(child: spec)]);
+            }
+            return Column(children: [img, const SizedBox(height: 12), spec]);
+          }),
 
-              if (row) {
-                return Row(children: [
-                  Expanded(child: img),
-                  const SizedBox(width: 12),
-                  Expanded(child: spec),
-                ]);
-              }
-              return Column(children: [img, SizedBox(height: vPad), spec]);
-            }),
+          SizedBox(height: vPad),
 
-            SizedBox(height: vPad * 1.2),
-
-            // TABLE di bawah hero
-            specTable(),
-          ],
-        ),
+          // TABLE
+          specTable(),
+        ],
       ),
 
       // Bottom Navigation (kapsul)
@@ -261,7 +312,7 @@ class MultipackPikoPage extends StatelessWidget {
   }
 }
 
-// Reusable bottom item
+// ===== Helpers =====
 Widget _navItem(IconData icon, String label, {required VoidCallback onTap}) {
   return InkWell(
     onTap: onTap,
@@ -275,4 +326,26 @@ Widget _navItem(IconData icon, String label, {required VoidCallback onTap}) {
       ],
     ),
   );
+}
+
+class _SpecRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const _SpecRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: RichText(
+        text: TextSpan(
+          style: const TextStyle(fontSize: 14, color: Colors.black87, height: 1.4),
+          children: [
+            TextSpan(text: '$label: ', style: const TextStyle(fontWeight: FontWeight.w800)),
+            TextSpan(text: value, style: const TextStyle(fontWeight: FontWeight.w600)),
+          ],
+        ),
+      ),
+    );
+  }
 }

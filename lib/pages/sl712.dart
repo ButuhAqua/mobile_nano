@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'categories_nano.dart';
-import 'create_sales_order.dart';
-import 'home.dart';
-import 'profile.dart';
 
 class StreetLight712Page extends StatelessWidget {
   const StreetLight712Page({super.key});
@@ -104,15 +101,19 @@ class StreetLight712Page extends StatelessWidget {
     // ===== TABEL SPESIFIKASI (di tengah, di atas perbandingan) =====
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
+          color: Colors.white, // background putih untuk header
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
+            style: const TextStyle(
+              color: Colors.black, // teks hitam
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+            ),
           ),
         );
 
-    // <- updated: highlight memberi latar biru penuh & teks putih
+    // <- td tetap sama
     Widget td(String text, {bool highlight = false}) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           alignment: Alignment.center,
@@ -121,7 +122,7 @@ class StreetLight712Page extends StatelessWidget {
             text,
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Colors.white, // teks putih (termasuk saat highlight)
+              color: Colors.white,
               fontWeight: highlight ? FontWeight.w800 : FontWeight.w600,
               fontSize: 12,
             ),
@@ -135,7 +136,7 @@ class StreetLight712Page extends StatelessWidget {
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
+        border: TableBorder.all(color: Colors.white, width: 1), // border tetap putih
         columnWidths: const {
           0: FixedColumnWidth(110),
           1: FixedColumnWidth(130),
@@ -214,7 +215,6 @@ class StreetLight712Page extends StatelessWidget {
           children: [
             brandChip(),
             SizedBox(height: vPad),
-
             Text('Product Street Light 712',
                 style: TextStyle(color: textPrimary, fontWeight: FontWeight.w700, fontSize: isTablet ? 18 : 16)),
             SizedBox(height: vPad),
@@ -274,56 +274,12 @@ class StreetLight712Page extends StatelessWidget {
               ),
             ] else ...[
               comparisonImageBlock(title: 'NANOLITE', imagePath: 'assets/images/sladjnano.jpg'),
-              SizedBox(height: vPad * 1.5),
+              SizedBox(height: vPad),
               comparisonImageBlock(title: 'PRODUK LAIN', imagePath: 'assets/images/sladjkom.jpg'),
             ],
           ],
         ),
       ),
-
-      // Bottom Navigation (kapsul)
-      bottomNavigationBar: SafeArea(
-        top: false,
-        child: Container(
-          margin: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, -2))],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _navItem(Icons.home, 'Home', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-              }),
-              _navItem(Icons.shopping_cart, 'Create Order', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => CreateSalesOrderScreen()));
-              }),
-              _navItem(Icons.person, 'Profile', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen()));
-              }),
-            ],
-          ),
-        ),
-      ),
     );
   }
-}
-
-// Bottom nav item (reusable)
-Widget _navItem(IconData icon, String label, {required VoidCallback onTap}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(12),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.black87),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.black87, fontSize: 12)),
-      ],
-    ),
-  );
 }

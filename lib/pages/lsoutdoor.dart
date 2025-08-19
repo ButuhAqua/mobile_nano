@@ -106,14 +106,18 @@ class OutdoorPage extends StatelessWidget {
 
     // ===== TABEL VARIAN (di atas perbandingan) =====
     Widget th(String text) => Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
-          ),
-        );
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      color: Colors.white, // ubah background jadi putih
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          color: Colors.black, // ubah font jadi hitam
+          fontWeight: FontWeight.w800,
+          fontSize: 12,
+        ),
+      ),
+    );
 
     // ⬇️ SEL WARNA FULL (tanpa padding supaya mengisi penuh)
     Widget warnaFullCell(String text, Color bg) => Container(
@@ -138,40 +142,40 @@ class OutdoorPage extends StatelessWidget {
 
     Widget specTable() {
       final table = Table(
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
-        columnWidths: const {
-          0: FixedColumnWidth(110),
-          1: FixedColumnWidth(130),
-          2: FixedColumnWidth(210),
-          3: FixedColumnWidth(110),
-          4: FixedColumnWidth(210),
-        },
-        children: [
-          TableRow(children: [
-            th('Varian Watt'),
-            th('Lumen'),
-            th('Ukuran'),
-            th('Warna'),
-            th('Keterangan'),
-          ]),
-          TableRow(children: [
-            td('9 w/m'),
-            td('120lm/watt'),
-            td('5000mm x 8mm x 3mm'),
-            // ⬇️ langsung pakai sel full color
-            warnaFullCell('6500K', accentBlue),
-            td('Cahaya Putih Kebiruan'),
-          ]),
-          TableRow(children: [
-            td('9 w/m'),
-            td('120lm/watt'),
-            td('5000mm x 8mm x 3mm'),
-            warnaFullCell('3000K', accentYellow),
-            td('Cahaya Putih Kekuningan'),
-          ]),
-        ],
-      );
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      border: TableBorder.all(color: Colors.white, width: 1), // border putih
+      columnWidths: const {
+        0: FixedColumnWidth(110),
+        1: FixedColumnWidth(130),
+        2: FixedColumnWidth(210),
+        3: FixedColumnWidth(110),
+        4: FixedColumnWidth(210),
+      },
+      children: [
+        TableRow(children: [
+          th('Varian Watt'),
+          th('Lumen'),
+          th('Ukuran'),
+          th('Warna'),
+          th('Keterangan'),
+        ]),
+        // rows bawah tetap seperti semula
+        TableRow(children: [
+          td('9 w/m'),
+          td('120lm/watt'),
+          td('5000mm x 8mm x 3mm'),
+          warnaFullCell('6500K', accentBlue),
+          td('Cahaya Putih Kebiruan'),
+        ]),
+        TableRow(children: [
+          td('9 w/m'),
+          td('120lm/watt'),
+          td('5000mm x 8mm x 3mm'),
+          warnaFullCell('3000K', accentYellow),
+          td('Cahaya Putih Kekuningan'),
+        ]),
+      ],
+    );
 
       return Container(
         decoration: BoxDecoration(color: card, borderRadius: BorderRadius.circular(18)),

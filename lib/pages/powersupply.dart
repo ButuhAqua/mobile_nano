@@ -1,7 +1,6 @@
-// lib/pages/powersupply.dart
 import 'package:flutter/material.dart';
+import 'package:mobile_nano/pages/categories_nano.dart';
 
-import 'categories_nano.dart';
 import 'create_sales_order.dart';
 import 'home.dart';
 import 'profile.dart';
@@ -17,9 +16,11 @@ class PowerSupplyPage extends StatelessWidget {
     const Color card = Color(0xFF0F2D4B);
     const Color chip = Color(0xFF163E66);
     const Color textPrimary = Colors.white;
+    const Color whiteColor = Colors.white;
+    const Color blackColor = Colors.black;
 
-    // Table header color
-    const Color headerDark = Color(0xFF0B2741);
+    // Warna khusus isi tabel (dari gambar kamu)
+    const Color tableCellBg = Color(0xFF0B2741);
 
     // ---- RESPONSIVE ----
     final size = MediaQuery.of(context).size;
@@ -62,22 +63,31 @@ class PowerSupplyPage extends StatelessWidget {
     // -------- TABLE UTILS --------
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
+          color: whiteColor, // header putih
           alignment: Alignment.center,
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
+            style: const TextStyle(
+              color: Colors.black, // teks hitam
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+            ),
           ),
         );
 
-    Widget td(String text) => Container(
+    Widget tdColor(String text, Color bg, {bool dark = false}) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           alignment: Alignment.center,
+          color: bg,
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 12),
+            style: TextStyle(
+              color: dark ? blackColor : whiteColor,
+              fontWeight: FontWeight.w800,
+              fontSize: 12,
+            ),
           ),
         );
 
@@ -88,7 +98,7 @@ class PowerSupplyPage extends StatelessWidget {
         columnWidths: const {
           0: FixedColumnWidth(220), // Input
           1: FixedColumnWidth(260), // Output
-          2: FixedColumnWidth(260), // Lumen (sesuai gambar, berisi ukuran)
+          2: FixedColumnWidth(260), // Lumen
         },
         children: [
           TableRow(children: [
@@ -96,11 +106,10 @@ class PowerSupplyPage extends StatelessWidget {
             th('Output'),
             th('Lumen'),
           ]),
-          // JANGAN pakai `const` di TableRow karena kita memanggil fungsi `td(...)`
           TableRow(children: [
-            td('100-240Vac'),
-            td('+12V=5A 60W Max'),
-            td('114mm x 28mm x 47mm'),
+            tdColor('100-240Vac', tableCellBg), // Input
+            tdColor('+12V=5A 60W Max', tableCellBg), // Output
+            tdColor('114mm x 28mm x 47mm', tableCellBg), // Lumen
           ]),
         ],
       );

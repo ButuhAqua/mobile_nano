@@ -21,7 +21,8 @@ class LightStrip50MPage extends StatelessWidget {
     const Color textPrimary = Colors.white;
 
     // Tabel accents
-    const Color headerDark = Color(0xFF0B2741);
+    const Color headerBg = Colors.white; // ubah header tabel menjadi putih
+    const Color headerText = Colors.black; // font header hitam
     const Color accentBlue = Color(0xFF03A9F4);   // 6500K
     const Color accentYellow = Color(0xFFFFC107); // 3000K
 
@@ -106,15 +107,14 @@ class LightStrip50MPage extends StatelessWidget {
     // ===== TABEL VARIAN =====
     Widget th(String text) => Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          color: headerDark,
+          color: headerBg,
           child: Text(
             text,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12),
+            style: const TextStyle(color: headerText, fontWeight: FontWeight.w800, fontSize: 12),
           ),
         );
 
-    // Sel warna: background PENUH (tanpa wrapper tambahan)
     Widget warnaCell(String text, Color bg) => Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -125,7 +125,6 @@ class LightStrip50MPage extends StatelessWidget {
           ),
         );
 
-    // ⬇️ Jika ada custom widget (seperti warnaCell), JANGAN dibungkus lagi agar warna bisa full-bleed.
     Widget td(String text, {Widget? custom}) {
       if (custom != null) return custom;
       return Container(
@@ -159,7 +158,7 @@ class LightStrip50MPage extends StatelessWidget {
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
+        border: TableBorder.all(color: Colors.white, width: 1),
         columnWidths: const {
           0: FixedColumnWidth(110),
           1: FixedColumnWidth(130),
@@ -180,7 +179,7 @@ class LightStrip50MPage extends StatelessWidget {
               td(r['watt'] as String),
               td(r['lumen'] as String),
               td(r['ukuran'] as String),
-              td('', custom: r['warna'] as Widget), // full-bleed color
+              td('', custom: r['warna'] as Widget),
               td(r['ket'] as String),
             ]),
         ],
@@ -236,7 +235,6 @@ class LightStrip50MPage extends StatelessWidget {
 
               final img = productImage('assets/images/ls50mnano.jpg', height: row ? heroH : null);
 
-              // Spesifikasi sesuai gambar referensi
               final spec = specCard(const [
                 'Tahan Sampai: 25.000 Jam',
                 'LED: 60-2835',

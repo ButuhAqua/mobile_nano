@@ -21,7 +21,8 @@ class IndoorPage extends StatelessWidget {
     const Color textPrimary = Colors.white;
 
     // Tabel accents
-    const Color headerDark = Color(0xFF0B2741);
+    const Color headerDark = Colors.white; // header diubah putih
+    const Color headerText = Colors.black; // teks header hitam
     const Color accentBlue = Color(0xFF03A9F4);   // 6500K
     const Color accentYellow = Color(0xFFFFC107); // 3000K
 
@@ -108,7 +109,7 @@ class IndoorPage extends StatelessWidget {
           color: headerDark,
           child: Text(text,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 12)),
+              style: const TextStyle(color: headerText, fontWeight: FontWeight.w800, fontSize: 12)),
         );
 
     Widget td(String text) => Container(
@@ -151,7 +152,7 @@ class IndoorPage extends StatelessWidget {
 
       final table = Table(
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        border: TableBorder.all(color: Colors.white24, width: 1),
+        border: TableBorder.all(color: Colors.white, width: 1),
         columnWidths: const {
           0: FixedColumnWidth(110),
           1: FixedColumnWidth(130),
@@ -293,41 +294,30 @@ class IndoorPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
           decoration: BoxDecoration(
             color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(28),
-            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 10, offset: Offset(0, -2))],
+            borderRadius: BorderRadius.circular(32),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _navItem(Icons.home, 'Home', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => HomeScreen()));
-              }),
-              _navItem(Icons.shopping_cart, 'Create Order', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => CreateSalesOrderScreen()));
-              }),
-              _navItem(Icons.person, 'Profile', onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (_) => ProfileScreen()));
-              }),
+              IconButton(
+                icon: const Icon(Icons.home),
+                onPressed: () => Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => HomeScreen())),
+              ),
+              IconButton(
+                icon: const Icon(Icons.add_box_rounded),
+                onPressed: () => Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => CreateSalesOrderScreen())),
+              ),
+              IconButton(
+                icon: const Icon(Icons.person),
+                onPressed: () => Navigator.pushReplacement(
+                    context, MaterialPageRoute(builder: (_) => ProfileScreen())),
+              ),
             ],
           ),
         ),
       ),
     );
   }
-}
-
-// Bottom nav item (reusable)
-Widget _navItem(IconData icon, String label, {required VoidCallback onTap}) {
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(12),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, color: Colors.black87),
-        const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.black87, fontSize: 12)),
-      ],
-    ),
-  );
 }
